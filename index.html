@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RBS DSN U16V</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+      <!-- SPĒLE -->
+    <section id="game" class="section">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Spēle</h2>
+          <div class="muted">Interaktīvs kvizs par komandu</div>
+        </div>
+
+        <div class="quiz-wrap">
+          <div class="quiz-intro">
+            <p>Pārbaudi, cik labi zini komandu. Atbildi uz 5 jautājumiem un beigās redzēsi savu rezultātu.</p>
+            <div class="quiz-meta">
+              <span class="tag">5 jautājumi</span>
+              <span class="tag">1 pareiza atbilde</span>
+              <span class="tag">Interaktīvi</span>
+            </div>
+          </div>
+
+          <div id="quizBox" class="quiz-box">
+            <div class="quiz-top">
+              <div id="quizProgress" class="quiz-progress">1 / 5</div>
+              <div id="quizScoreLive" class="quiz-score-live">Punkti: 0</div>
+            </div>
+
+            <h3 id="quizQuestion" class="quiz-question"></h3>
+            <div id="quizAnswers" class="quiz-answers"></div>
+
+            <div class="quiz-actions">
+              <button id="nextQuestionBtn" class="nav-btn" disabled>Nākamais jautājums</button>
+              <button id="restartQuizBtn" class="nav-btn">Sākt no jauna</button>
+            </div>
+
+            <div id="quizResult" class="quiz-result" style="display:none;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <span>© RBS DSN U16V</span>
+    <span class="dot">•</span>
+    <span>Portfolio lapa</span>
+  </footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
