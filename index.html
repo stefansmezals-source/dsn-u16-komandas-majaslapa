@@ -1,305 +1,674 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="lv">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RBS DSN U16V</title>
-  <style>
-:root{
-  --bg:#0f172a; --panel:#1e293b; --stroke:rgba(255,255,255,.12);
-  --text:rgba(255,255,255,.92); --muted:rgba(255,255,255,.68);
-  --accent:#a10f2b; --good:#22c55e; --bad:#ef4444;
-  --shadow:0 16px 55px rgba(0,0,0,.45);
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RBS DSN U16V</title>
+<style>
+:root{--bg:#0f172a;--text:rgba(255,255,255,.92);--muted:rgba(255,255,255,.68);--stroke:rgba(255,255,255,.12);--accent:#a10f2b;--good:#22c55e;--bad:#ef4444;--shadow:0 16px 55px rgba(0,0,0,.45)}
+*{box-sizing:border-box} body{margin:0;font-family:Arial,system-ui;background:radial-gradient(900px 520px at 18% 12%,rgba(161,15,43,.22),transparent 60%),radial-gradient(900px 520px at 85% 85%,rgba(34,197,94,.10),transparent 60%),var(--bg);color:var(--text)}
+.app{width:min(1200px,94vw);margin:22px auto 40px} .top{background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.06));border:1px solid var(--stroke);border-radius:18px;box-shadow:var(--shadow);padding:16px;position:sticky;top:14px;z-index:5;backdrop-filter:blur(10px)}
+.brand{display:flex;align-items:center;gap:14px} .brand-logo{width:56px;height:56px;border-radius:14px;object-fit:cover;border:1px solid rgba(255,255,255,.16)} h1{margin:0;font-size:18px} .brand p,.muted{color:var(--muted);font-size:13px;margin:4px 0 0}
+.nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px} .nav-btn{border:none;cursor:pointer;padding:9px 12px;border-radius:10px;background:rgba(255,255,255,.10);color:var(--text);border:1px solid rgba(255,255,255,.14);font-weight:800} .nav-btn.active{background:rgba(161,15,43,.32);border-color:rgba(161,15,43,.55)}
+.main{margin-top:16px} .section{display:none} .section.active{display:block} .panel{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.05));border:1px solid var(--stroke);border-radius:18px;box-shadow:var(--shadow);padding:18px} .panel-head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:14px} .panel-head h2{margin:0;font-size:18px}
+.about-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px} .gallery{display:grid;gap:12px} .team-photo{width:100%;border-radius:16px;border:1px solid rgba(255,255,255,.14);box-shadow:0 18px 50px rgba(0,0,0,.35)} .box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px;margin:12px 0} .box p{line-height:1.55}
+.search{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.18);color:white;outline:none;margin-bottom:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px} .card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px;display:flex;gap:12px} .avatar{width:86px;height:110px;border-radius:14px;object-fit:cover;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08);flex:0 0 auto} .no-photo{display:grid;place-items:center;text-align:center;font-weight:900;color:rgba(255,255,255,.55)} .card h3{margin:0 0 8px;font-size:16px} .card p{margin:6px 0;color:rgba(255,255,255,.82);font-size:13px} .tag{display:inline-block;font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);margin-right:6px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px} .kpi{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px} .kpi .value{font-size:24px;font-weight:900} .kpi .label{color:var(--muted);font-size:12px;margin-top:6px}
+.table-wrap{overflow:auto;border-radius:16px;border:1px solid rgba(255,255,255,.12)} table{width:100%;border-collapse:collapse;min-width:900px;background:rgba(0,0,0,.12)} th,td{padding:10px;text-align:center;font-size:13px;border-bottom:1px solid rgba(255,255,255,.10)} th{background:rgba(34,49,79,.95);position:sticky;top:0} .team-cell{display:flex;align-items:center;gap:10px;text-align:left} .dsn-row{background:rgba(34,197,94,.16);font-weight:900}
+.logo,.mini{width:34px;height:34px;object-fit:contain;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14)} .mini{width:26px;height:26px;border-radius:8px} .no-logo{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);display:grid;place-items:center;font-size:8px;color:rgba(255,255,255,.65);font-weight:900;text-align:center}
+.games-list{display:flex;flex-direction:column;gap:12px} .game-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:12px} .game-top{display:flex;justify-content:space-between;color:var(--muted);font-size:12px;margin-bottom:10px} .game-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px} .team{display:flex;align-items:center;gap:10px;font-weight:900} .team.right{justify-content:flex-end;text-align:right} .score{font-weight:900;font-size:18px;padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.18);min-width:110px;text-align:center}
+.leaders{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px} .leader{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px} .leader.first{background:rgba(250,204,21,.12);border-color:rgba(250,204,21,.5)} .leader img{width:44px;height:44px;border-radius:14px;object-fit:cover} .leader .val{margin-left:auto;font-weight:900}
+.bracket-big{background:radial-gradient(circle at top left, rgba(161,15,43,.35), transparent 35%),linear-gradient(135deg, rgba(0,0,0,.45), rgba(255,255,255,.05));border:1px solid rgba(255,255,255,.14);border-radius:22px;padding:20px;overflow:auto}
+.bracket-title{text-align:center;font-size:34px;font-weight:1000;letter-spacing:2px;margin-bottom:20px;color:#fff;text-shadow:0 4px 18px rgba(0,0,0,.75)}
+.bracket-layout{display:grid;grid-template-columns:330px 260px 260px 220px;gap:28px;min-width:1100px;align-items:center}
+.bracket-col h3{text-align:center;background:rgba(161,15,43,.55);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:10px;margin:0 0 16px}
+.bracket-match{background:rgba(15,23,42,.86);border:1px solid rgba(255,255,255,.18);border-radius:16px;padding:10px;margin-bottom:18px;box-shadow:0 12px 35px rgba(0,0,0,.35)}
+.bracket-match.dsn-match{border-color:rgba(34,197,94,.75);background:rgba(34,197,94,.12)}
+.team-line{display:grid;grid-template-columns:38px 44px 1fr;align-items:center;gap:9px;padding:7px 0}
+.team-line img{width:44px;height:34px;object-fit:contain;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
+.seed{background:#fff;color:#111827;font-size:20px;font-weight:1000;border-radius:8px;text-align:center;padding:5px 0}
+.match-info{color:rgba(255,255,255,.70);font-size:12px;margin-left:48px;padding:4px 0}
+.no-small{width:44px;height:34px;display:grid;place-items:center;font-size:8px;text-align:center;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.65);font-weight:900}
+.empty-match{height:92px;display:grid;place-items:center;background:rgba(15,23,42,.86);border:1px solid rgba(255,255,255,.18);border-radius:16px;margin-bottom:46px;color:rgba(255,255,255,.70);font-weight:900}
+.final-box{height:120px;border-color:rgba(250,204,21,.45)}
+.quiz-answers{display:grid;gap:10px} .answer-btn{width:100%;text-align:left;padding:13px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:white;cursor:pointer;font-weight:700} .answer-btn.correct{background:rgba(34,197,94,.18)} .answer-btn.wrong{background:rgba(239,68,68,.18)} .quiz-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap} .quiz-result{margin-top:16px;padding:14px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14)}
+.footer{margin-top:16px;text-align:center;color:rgba(255,255,255,.65);font-size:12px}
+@media(max-width:900px){.about-grid{grid-template-columns:1fr}} @media(max-width:650px){.game-row{grid-template-columns:1fr}.team.right{justify-content:flex-start;text-align:left}.score{width:100%}.panel-head{display:block}}
+
+.game-card.win{
+  border-color:rgba(34,197,94,.55);
+  background:rgba(34,197,94,.12);
 }
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0; font-family:Arial,system-ui,-apple-system,Segoe UI,Roboto;
-  background:
-    radial-gradient(900px 520px at 18% 12%, rgba(161,15,43,.22), transparent 60%),
-    radial-gradient(900px 520px at 85% 85%, rgba(34,197,94,.10), transparent 60%),
-    var(--bg);
-  color:var(--text);
+.game-card.loss{
+  border-color:rgba(239,68,68,.55);
+  background:rgba(239,68,68,.12);
 }
-.app{width:min(1200px,94vw); margin:22px auto 40px}
-.top{
-  background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.06));
-  border:1px solid var(--stroke); border-radius:18px; box-shadow:var(--shadow);
-  padding:16px; position:sticky; top:14px; backdrop-filter:blur(10px); z-index:5;
+.game-card.win .score{
+  color:#86efac;
+  border-color:rgba(34,197,94,.45);
 }
-.brand{display:flex;align-items:center;gap:14px}
-.brand-logo{width:56px;height:56px;border-radius:14px;object-fit:cover;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16)}
-.brand-text h1{margin:0;font-size:18px}.brand-text p{margin:4px 0 0;color:var(--muted);font-size:13px}
-.nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.nav-btn{
-  cursor:pointer;padding:9px 12px;border-radius:10px;background:rgba(255,255,255,.10);
-  color:var(--text);border:1px solid rgba(255,255,255,.14);font-weight:800;transition:.18s
+.game-card.loss .score{
+  color:#fecaca;
+  border-color:rgba(239,68,68,.45);
 }
-.nav-btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.25)}
-.nav-btn.is-active{background:rgba(161,15,43,.32);border-color:rgba(161,15,43,.55)}
-.main{margin-top:16px}.section{display:none}.section.is-active{display:block}
-.panel{
-  background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
-  border:1px solid var(--stroke); border-radius:18px; box-shadow:var(--shadow); padding:18px;
+.game-card.todo{
+  border-color:rgba(250,204,21,.38);
+  background:rgba(250,204,21,.08);
 }
-.panel-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px}
-.panel-head h2{margin:0;font-size:18px}.muted{color:var(--muted);font-size:13px}
-.about-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}
-@media(max-width:900px){.about-grid{grid-template-columns:1fr}}
-.gallery{display:grid;gap:12px}.team-photo{width:100%;border-radius:16px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);box-shadow:0 18px 50px rgba(0,0,0,.35)}
-.about-text p{margin:0 0 12px;color:rgba(255,255,255,.86);line-height:1.55}
-.achievements,.coach,.note,.quiz-intro,.quiz-box,.kpi,.card,.game,.leader{
-  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px
+
+
+.bracket-layout.playoff-four{
+  display:grid;
+  grid-template-columns: 360px 300px 260px;
+  gap:34px;
+  min-width:980px;
+  align-items:center;
 }
-.achievements,.coach,.note{padding:12px;margin:12px 0}.achievements h3{margin:0 0 8px;font-size:14px}.achievements ul{margin:0;padding-left:18px;color:rgba(255,255,255,.86)}.achievements li{margin:6px 0}
-.coach-badge,.tag{display:inline-block;font-size:12px;color:var(--muted);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);padding:6px 10px;border-radius:999px}
-.coach-row{display:flex;align-items:center;gap:12px;margin-top:10px}.coach-avatar{width:44px;height:44px;display:grid;place-items:center;border-radius:14px;background:rgba(161,15,43,.30);border:1px solid rgba(161,15,43,.45)}
-.coach-role{color:var(--muted);font-size:12px}.coach-name{font-weight:900}.note{border-style:dashed;color:rgba(255,255,255,.80);font-size:13px}
-.toolbar{margin-bottom:14px}.search{width:100%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.18);color:var(--text);outline:none}
-.grid,.leaders{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
-.card{padding:14px;display:flex;gap:12px;transition:.18s}.card:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.22)}
-.avatar{width:86px;height:110px;border-radius:14px;object-fit:cover;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);flex:0 0 auto}
-.no-photo{display:grid;place-items:center;font-weight:900;color:rgba(255,255,255,.55);text-align:center}
-.card h3{margin:0;font-size:16px}.meta{margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:6px 10px;font-size:13px;color:rgba(255,255,255,.84)}.meta span{color:var(--muted)}
-.tagrow,.quiz-meta,.quiz-actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px}.kpi{padding:14px}.kpi .value{font-size:24px;font-weight:900}.kpi .label{margin-top:6px;color:var(--muted);font-size:12px}
-.table-wrap{overflow:auto;border-radius:16px;border:1px solid rgba(255,255,255,.12)}
-table{width:100%;border-collapse:collapse;min-width:980px;background:rgba(0,0,0,.12)}
-th,td{padding:10px;text-align:center;font-size:13px;border-bottom:1px solid rgba(255,255,255,.10)}
-th{position:sticky;top:0;background:rgba(34,49,79,.95);z-index:1;font-size:12px;color:rgba(255,255,255,.85)}
-tbody tr:hover{background:rgba(255,255,255,.06)}
-.team-cell,.team{display:flex;gap:10px;align-items:center}.team-cell{justify-content:flex-start}.teamlogo-mini{width:26px;height:26px;object-fit:contain;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
-.subhead{margin:18px 0 10px;font-size:14px;color:rgba(255,255,255,.86)}.games-list{display:flex;flex-direction:column;gap:12px}.game{padding:12px}
-.game-top{display:flex;justify-content:space-between;gap:10px;color:var(--muted);font-size:12px;margin-bottom:10px}
-.game-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px}.team{font-weight:900}.team.right{justify-content:flex-end;text-align:right}
-.team-logo{width:34px;height:34px;object-fit:contain;border-radius:10px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14)}
-.score{font-weight:900;font-size:18px;padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.18);min-width:110px;text-align:center}
-.score.win{color:var(--good);border-color:rgba(34,197,94,.35)}.score.loss{color:var(--bad);border-color:rgba(239,68,68,.35)}
-.leader{padding:14px;display:flex;gap:12px;align-items:center}.leader.first{border-color:rgba(250,204,21,.50);background:rgba(250,204,21,.12)}
-.leader .limg{width:44px;height:44px;border-radius:14px;object-fit:cover;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.08)}
-.leader .name{font-weight:900}.leader .val{margin-left:auto;font-weight:900;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.12)}
-tr.dsn{background:rgba(34,197,94,.16)}tr.dsn td{font-weight:900}.footer{margin-top:16px;color:rgba(255,255,255,.65);font-size:12px;text-align:center}.dot{margin:0 8px;opacity:.6}
-.quiz-wrap{display:grid;gap:16px}.quiz-intro,.quiz-box{padding:16px}.quiz-intro p{margin:0 0 10px;color:rgba(255,255,255,.86);line-height:1.55}
-.quiz-top{display:flex;justify-content:space-between;gap:12px;margin-bottom:14px;color:var(--muted);font-size:13px}.quiz-question{margin:0 0 14px;font-size:20px;line-height:1.4}.quiz-answers{display:grid;gap:10px}
-.answer-btn{width:100%;text-align:left;padding:13px 14px;border-radius:12px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.07);color:var(--text);cursor:pointer;font-weight:700;transition:.18s}
-.answer-btn:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.26);background:rgba(255,255,255,.10)}
-.answer-btn.correct{background:rgba(34,197,94,.18);border-color:rgba(34,197,94,.45);color:#dcfce7}.answer-btn.wrong{background:rgba(239,68,68,.18);border-color:rgba(239,68,68,.45);color:#fee2e2}.answer-btn:disabled{cursor:default;opacity:1}
-.quiz-result{margin-top:16px;padding:14px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);font-size:15px;line-height:1.5}.quiz-result strong{font-size:18px}
-@media(max-width:650px){.game-row{grid-template-columns:1fr}.team.right{justify-content:flex-start;text-align:left}.score{width:100%}.panel-head{display:block}.muted{margin-top:6px}}
-  </style>
+
+.empty-match span{
+  display:block;
+  margin-top:5px;
+  font-size:12px;
+  color:rgba(255,255,255,.62);
+}
+
+.dsn-empty{
+  border-color:rgba(34,197,94,.65);
+  background:rgba(34,197,94,.12);
+}
+
+.bronze-box{
+  height:120px;
+  border-color:rgba(205,127,50,.65);
+  background:rgba(205,127,50,.12);
+}
+
+.final-box{
+  height:140px;
+  border-color:rgba(250,204,21,.65);
+  background:rgba(250,204,21,.13);
+}
+
+.medal .empty-match{
+  margin-bottom:70px;
+}
+
+</style>
 </head>
 <body>
 <div class="app">
-  <header class="top">
-    <div class="brand">
-      <img class="brand-logo" id="brandLogo" alt="DSN logo">
-      <div class="brand-text"><h1>RBS DSN U16V</h1><p>Komandas portfolio</p></div>
-    </div>
-    <nav class="nav" aria-label="Galvenā navigācija">
-      <button class="nav-btn is-active" data-target="about">Par komandu</button>
-      <button class="nav-btn" data-target="roster">Sastāvs</button>
-      <button class="nav-btn" data-target="teamstats">Komandas statistika</button>
-      <button class="nav-btn" data-target="playerstats">Spēlētāju statistika</button>
-      <button class="nav-btn" data-target="leaders">Līderi</button>
-      <button class="nav-btn" data-target="games">Kalendārs</button>
-      <button class="nav-btn" data-target="standings">Tabula</button>
-      <button class="nav-btn" data-target="game">Spēle</button>
-    </nav>
-  </header>
-
-  <main class="main">
-    <section id="about" class="section is-active">
-      <div class="panel">
-        <div class="panel-head"><h2>Par komandu</h2><div class="muted">RBS • DSN • U16V</div></div>
-        <div class="about-grid">
-          <div class="about-media"><div class="gallery"><img id="teamImg1" class="team-photo" alt="Komandas bilde 1"><img id="teamImg2" class="team-photo" alt="Komandas bilde 2"></div></div>
-          <div class="about-text">
-            <p>DSN Basketball (Daugavas sporta nams) ir Basketbola skolas Rīga struktūrvienība, kas darbojas Rīgā. Komandas piedalās vietējos čempionātos un BBBL, kā arī regulāri startē jaunatnes turnīros.</p>
-            <div class="achievements"><h3>Sasniegumi</h3><ul><li><b>2025/26:</b> BBBL Supercup — <b>2. vieta</b></li><li><b>2024/25:</b> LJBL — <b>7. vieta</b></li><li><b>2024/25:</b> EYBL — <b>14. vieta</b></li></ul></div>
-            <div class="coach"><div class="coach-badge">Vadība</div><div class="coach-row"><div class="coach-avatar">🏀</div><div><div class="coach-role">Galvenais treneris</div><div class="coach-name">Artūrs Ronis</div></div></div></div>
-            <div class="note">Ja kādam spēlētājam nav bildes, tā vienkārši nerādīsies kā “No photo”, bet lapa nesabojāsies.</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="roster" class="section"><div class="panel"><div class="panel-head"><h2>Sastāvs</h2><div class="muted" id="rosterCount"></div></div><div class="toolbar"><input id="searchPlayer" class="search" type="search" placeholder="Meklēt spēlētāju..."></div><div id="rosterGrid" class="grid"></div></div></section>
-
-    <section id="teamstats" class="section"><div class="panel"><div class="panel-head"><h2>Komandas statistika</h2><div class="muted">Vidēji spēlē (Pamatturnīrs)</div></div><div class="kpi-grid" id="teamKpis"></div></div></section>
-
-    <section id="playerstats" class="section">
-      <div class="panel"><div class="panel-head"><h2>Spēlētāju statistika</h2><div class="muted">Pilna tabula • visi spēlētāji</div></div>
-        <div class="table-wrap"><table id="statsTable"><thead><tr><th style="text-align:left">Spēlētājs</th><th>Nr</th><th>PPG</th><th>G</th><th>MPG</th><th>ORPG</th><th>DRPG</th><th>RPG</th><th>APG</th><th>FPG</th><th>ToPG</th><th>SPG</th><th>BSG</th><th>DPG</th></tr></thead><tbody id="statsBody"></tbody></table></div>
-      </div>
-    </section>
-
-    <section id="leaders" class="section"><div class="panel"><div class="panel-head"><h2>Līderi</h2><div class="muted">TOP 5 pēc PPG</div></div><div id="leadersList" class="leaders"></div></div></section>
-
-    <section id="games" class="section"><div class="panel"><div class="panel-head"><h2>Spēļu kalendārs un rezultāti</h2><div class="muted">Ar logo + vieta + datums</div></div><div class="games-wrap"><h3 class="subhead">Rezultāti</h3><div id="resultsList" class="games-list"></div><h3 class="subhead">Gaidāmās spēles</h3><div id="upcomingList" class="games-list"></div></div></div></section>
-
-    <section id="standings" class="section"><div class="panel"><div class="panel-head"><h2>Turnīra tabula</h2><div class="muted">Pamatturnīrs</div></div><div class="table-wrap"><table><thead><tr><th>Poz.</th><th style="text-align:left">Komanda</th><th>Logo</th><th>S</th><th>U</th><th>Z</th><th>Pkt.</th></tr></thead><tbody id="standingsBody"></tbody></table></div></div></section>
-
-    <section id="game" class="section">
-      <div class="panel">
-        <div class="panel-head"><h2>Spēle</h2><div class="muted">Interaktīvs kvizs par komandu</div></div>
-        <div class="quiz-wrap">
-          <div class="quiz-intro"><p>Pārbaudi, cik labi zini komandu. Atbildi uz 5 jautājumiem un beigās redzēsi savu rezultātu.</p><div class="quiz-meta"><span class="tag">5 jautājumi</span><span class="tag">1 pareiza atbilde</span><span class="tag">Interaktīvi</span></div></div>
-          <div id="quizBox" class="quiz-box">
-            <div class="quiz-top"><div id="quizProgress" class="quiz-progress">1 / 5</div><div id="quizScoreLive" class="quiz-score-live">Punkti: 0</div></div>
-            <h3 id="quizQuestion" class="quiz-question"></h3><div id="quizAnswers" class="quiz-answers"></div>
-            <div class="quiz-actions"><button id="nextQuestionBtn" class="nav-btn" disabled>Nākamais jautājums</button><button id="restartQuizBtn" class="nav-btn">Sākt no jauna</button></div>
-            <div id="quizResult" class="quiz-result" style="display:none;"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer"><span>© RBS DSN U16V</span><span class="dot">•</span><span>Portfolio lapa</span></footer>
+<header class="top">
+  <div class="brand"><img class="brand-logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg"><div><h1>RBS DSN U16V</h1><p>Komandas portfolio</p></div></div>
+  <nav class="nav">
+    <button class="nav-btn active" onclick="showSection('about',this)">Par komandu</button>
+    <button class="nav-btn" onclick="showSection('roster',this)">Sastāvs</button>
+    <button class="nav-btn" onclick="showSection('teamstats',this)">Komandas statistika</button>
+    <button class="nav-btn" onclick="showSection('playerstats',this)">Spēlētāju statistika</button>
+    <button class="nav-btn" onclick="showSection('leaders',this)">Līderi</button>
+    <button class="nav-btn" onclick="showSection('games',this)">Kalendārs</button>
+    <button class="nav-btn" onclick="showSection('standings',this)">Tabula</button>
+    <button class="nav-btn" onclick="showSection('playoffs',this)">Playoff 2025/26</button>
+    <button class="nav-btn" onclick="showSection('game',this)">Spēle</button>
+  </nav>
+</header>
+<main class="main">
+<section id="about" class="section active"><div class="panel"><div class="panel-head"><h2>Par komandu</h2><div class="muted">RBS • DSN • U16V</div></div><div class="about-grid"><div class="gallery"><img class="team-photo" src="https://i.postimg.cc/MKVr804r/IMG_2927.jpg"><img class="team-photo" src="https://i.postimg.cc/02DHqG3X/IMG_3254.jpg"></div><div><div class="box"><p>DSN Basketball (Daugavas sporta nams) ir Basketbola skolas Rīga struktūrvienība, kas darbojas Rīgā.</p></div><div class="box"><h3>Sasniegumi</h3><ul><li><b>2025/26:</b> Pamatturnīrs — <b>3. vieta</b></li><li><b>2025/26:</b> Bilance — <b>16 uzvaras, 6 zaudējumi</b></li><li><b>2025/26:</b> Playoff — <b>pret Jūrmalas Sp. skolu U16V</b></li></ul></div><div class="box"><b>Galvenais treneris:</b> Artūrs Ronis 🏀</div></div></div></div></section>
+<section id="roster" class="section"><div class="panel"><div class="panel-head"><h2>Sastāvs</h2><div class="muted">22 spēlētāji</div></div><input id="searchPlayer" class="search" type="search" placeholder="Meklēt spēlētāju..."><div class="grid">
+<div class="card player-card" data-name="atvars siliņš">
+  <div class="avatar no-photo">No<br>photo</div>
+  <div>
+    <h3>Atvars Siliņš</h3>
+    <p><b>Nr:</b> — • <b>Pilsonība:</b> Latvija</p>
+    <p><b>Dzimšanas datums:</b> 12.05.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
 </div>
+<div class="card player-card" data-name="dāvis grīnvalds">
+  <img class="avatar" src="https://i.postimg.cc/Kjrc63yT/IMG_3852.png" onerror="this.outerHTML='<div class=&quot;avatar no-photo&quot;>No<br>photo</div>'">
+  <div>
+    <h3>Dāvis Grīnvalds</h3>
+    <p><b>Nr:</b> 19 • <b>Pilsonība:</b> LAT</p>
+    <p><b>Dzimšanas datums:</b> 16.09.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="deivids dambis">
+  <img class="avatar" src="https://i.postimg.cc/ZnFYGvhy/IMG_3853.png" onerror="this.outerHTML='<div class=&quot;avatar no-photo&quot;>No<br>photo</div>'">
+  <div>
+    <h3>Deivids Dambis</h3>
+    <p><b>Nr:</b> 7 • <b>Pilsonība:</b> LAT</p>
+    <p><b>Dzimšanas datums:</b> 27.05.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="emīls ozols">
+  <img class="avatar" src="https://i.postimg.cc/7hMPFJy7/IMG_3854.png" onerror="this.outerHTML='<div class=&quot;avatar no-photo&quot;>No<br>photo</div>'">
+  <div>
+    <h3>Emīls Ozols</h3>
+    <p><b>Nr:</b> 16 • <b>Pilsonība:</b> LAT</p>
+    <p><b>Dzimšanas datums:</b> 14.05.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="gustavs bērziņš">
+  <div class="avatar no-photo">No<br>photo</div>
+  <div>
+    <h3>Gustavs Bērziņš</h3>
+    <p><b>Nr:</b> — • <b>Pilsonība:</b> LAT</p>
+    <p><b>Dzimšanas datums:</b> 11.06.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="gustavs rība">
+  <div class="avatar no-photo">No<br>photo</div>
+  <div>
+    <h3>Gustavs Rība</h3>
+    <p><b>Nr:</b> — • <b>Pilsonība:</b> Latvija</p>
+    <p><b>Dzimšanas datums:</b> 21.05.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="gusts bergmanis">
+  <img class="avatar" src="https://i.postimg.cc/NF7G32wm/IMG_3855.png" onerror="this.outerHTML='<div class=&quot;avatar no-photo&quot;>No<br>photo</div>'">
+  <div>
+    <h3>Gusts Bergmanis</h3>
+    <p><b>Nr:</b> 44 • <b>Pilsonība:</b> LAT</p>
+    <p><b>Dzimšanas datums:</b> 10.03.2011</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="henrijs tavars">
+  <div class="avatar no-photo">No<br>photo</div>
+  <div>
+    <h3>Henrijs Tavars</h3>
+    <p><b>Nr:</b> — • <b>Pilsonība:</b> LAT</p>
+    <p><b>Dzimšanas datums:</b> 24.07.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="jēkabs reinis">
+  <div class="avatar no-photo">No<br>photo</div>
+  <div>
+    <h3>Jēkabs Reinis</h3>
+    <p><b>Nr:</b> — • <b>Pilsonība:</b> Latvija</p>
+    <p><b>Dzimšanas datums:</b> 01.01.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="kārlis ziediņš">
+  <img class="avatar" src="https://i.postimg.cc/Hn4Wq8C0/IMG_3856.png" onerror="this.outerHTML='<div class=&quot;avatar no-photo&quot;>No<br>photo</div>'">
+  <div>
+    <h3>Kārlis Ziediņš</h3>
+    <p><b>Nr:</b> 34 • <b>Pilsonība:</b> Latvija</p>
+    <p><b>Dzimšanas datums:</b> 19.09.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="krišjānis spila">
+  <img class="avatar" src="https://i.postimg.cc/zvSDsH1S/IMG_3857.png" onerror="this.outerHTML='<div class=&quot;avatar no-photo&quot;>No<br>photo</div>'">
+  <div>
+    <h3>Krišjānis Spila</h3>
+    <p><b>Nr:</b> 32 • <b>Pilsonība:</b> LAT</p>
+    <p><b>Dzimšanas datums:</b> 12.02.2011</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="martins pauls ošiņš">
+  <img class="avatar" src="https://i.postimg.cc/0jd5TKq0/IMG_3858.png" onerror="this.outerHTML='<div class=&quot;avatar no-photo&quot;>No<br>photo</div>'">
+  <div>
+    <h3>Martins Pauls Ošiņš</h3>
+    <p><b>Nr:</b> 4 • <b>Pilsonība:</b> LAT</p>
+    <p><b>Dzimšanas datums:</b> 02.06.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="oskars zinčenko">
+  <img class="avatar" src="https://i.postimg.cc/8cBk2fVH/IMG_3859.png" onerror="this.outerHTML='<div class=&quot;avatar no-photo&quot;>No<br>photo</div>'">
+  <div>
+    <h3>Oskars Zinčenko</h3>
+    <p><b>Nr:</b> 9 • <b>Pilsonība:</b> Latvija</p>
+    <p><b>Dzimšanas datums:</b> 07.08.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="oto pumpurs">
+  <img class="avatar" src="https://i.postimg.cc/zvSDsH1p/IMG_3860.png" onerror="this.outerHTML='<div class=&quot;avatar no-photo&quot;>No<br>photo</div>'">
+  <div>
+    <h3>Oto Pumpurs</h3>
+    <p><b>Nr:</b> 18 • <b>Pilsonība:</b> LAT</p>
+    <p><b>Dzimšanas datums:</b> 30.01.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="otto švāgeris">
+  <img class="avatar" src="https://i.postimg.cc/ZnFYGvhV/IMG_3861.png" onerror="this.outerHTML='<div class=&quot;avatar no-photo&quot;>No<br>photo</div>'">
+  <div>
+    <h3>Otto Švāgeris</h3>
+    <p><b>Nr:</b> 12 • <b>Pilsonība:</b> Latvija</p>
+    <p><b>Dzimšanas datums:</b> 20.10.2011</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="pauls sirmais">
+  <img class="avatar" src="https://i.postimg.cc/nrYVy9tR/IMG_3862.png" onerror="this.outerHTML='<div class=&quot;avatar no-photo&quot;>No<br>photo</div>'">
+  <div>
+    <h3>Pauls Sirmais</h3>
+    <p><b>Nr:</b> 22 • <b>Pilsonība:</b> LAT</p>
+    <p><b>Dzimšanas datums:</b> 14.02.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="ralfs rudzinskis">
+  <img class="avatar" src="https://i.postimg.cc/hvb4kQq3/IMG_3863.png" onerror="this.outerHTML='<div class=&quot;avatar no-photo&quot;>No<br>photo</div>'">
+  <div>
+    <h3>Ralfs Rudzinskis</h3>
+    <p><b>Nr:</b> 13 • <b>Pilsonība:</b> Latvija</p>
+    <p><b>Dzimšanas datums:</b> 12.06.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="rodrigo pontags">
+  <img class="avatar" src="https://i.postimg.cc/tJtRKnHf/IMG_3864.png" onerror="this.outerHTML='<div class=&quot;avatar no-photo&quot;>No<br>photo</div>'">
+  <div>
+    <h3>Rodrigo Pontags</h3>
+    <p><b>Nr:</b> 35 • <b>Pilsonība:</b> LAT</p>
+    <p><b>Dzimšanas datums:</b> 10.06.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="rodrigo pūce">
+  <div class="avatar no-photo">No<br>photo</div>
+  <div>
+    <h3>Rodrigo Pūce</h3>
+    <p><b>Nr:</b> — • <b>Pilsonība:</b> Latvija</p>
+    <p><b>Dzimšanas datums:</b> 07.12.2011</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="stefans mežals">
+  <img class="avatar" src="https://i.postimg.cc/nrYVy9tN/IMG_3865.png" onerror="this.outerHTML='<div class=&quot;avatar no-photo&quot;>No<br>photo</div>'">
+  <div>
+    <h3>Stefans Mežals</h3>
+    <p><b>Nr:</b> 25 • <b>Pilsonība:</b> LAT</p>
+    <p><b>Dzimšanas datums:</b> 05.09.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="teodors rudzītis">
+  <div class="avatar no-photo">No<br>photo</div>
+  <div>
+    <h3>Teodors Rudzītis</h3>
+    <p><b>Nr:</b> — • <b>Pilsonība:</b> LAT</p>
+    <p><b>Dzimšanas datums:</b> 29.05.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div>
+<div class="card player-card" data-name="timotejs martinsons">
+  <img class="avatar" src="https://i.postimg.cc/J7bhDvBm/IMG_3866.png" onerror="this.outerHTML='<div class=&quot;avatar no-photo&quot;>No<br>photo</div>'">
+  <div>
+    <h3>Timotejs Martinsons</h3>
+    <p><b>Nr:</b> 11 • <b>Pilsonība:</b> LAT</p>
+    <p><b>Dzimšanas datums:</b> 04.05.2010</p>
+    <span class="tag">U16V</span><span class="tag">DSN</span>
+  </div>
+</div></div></div></section>
+<section id="teamstats" class="section"><div class="panel"><div class="panel-head"><h2>Komandas statistika</h2><div class="muted">Pamatturnīrs 2025/26</div></div><div class="kpi-grid"><div class="kpi"><div class="value">22</div><div class="label">Spēles</div></div><div class="kpi"><div class="value">16</div><div class="label">Uzvaras</div></div><div class="kpi"><div class="value">6</div><div class="label">Zaudējumi</div></div><div class="kpi"><div class="value">38</div><div class="label">Punkti tabulā</div></div><div class="kpi"><div class="value">1725</div><div class="label">Gūtie punkti</div></div><div class="kpi"><div class="value">1640</div><div class="label">Zaudētie punkti</div></div></div></div></section>
+<section id="playerstats" class="section">
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Spēlētāju statistika</h2>
+      <div class="muted">Visa komanda • pamatturnīrs</div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left">Spēlētājs</th>
+            <th>Nr</th>
+            <th>PPG</th>
+            <th>G</th>
+            <th>MPG</th>
+            <th>ORPG</th>
+            <th>DRPG</th>
+            <th>RPG</th>
+            <th>APG</th>
+            <th>FPG</th>
+            <th>ToPG</th>
+            <th>SPG</th>
+            <th>BSG</th>
+            <th>DPG</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="text-align:left;font-weight:900">Atvars Siliņš</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr><tr><td style="text-align:left;font-weight:900">Dāvis Grīnvalds</td><td>19</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr><tr><td style="text-align:left;font-weight:900">Deivids Dambis</td><td>7</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr><tr><td style="text-align:left;font-weight:900">Emīls Ozols</td><td>16</td><td>8.9</td><td>8</td><td>20:02</td><td>3.8</td><td>5.4</td><td>9.1</td><td>1.1</td><td>2.5</td><td>2.2</td><td>0.8</td><td>0.6</td><td>0</td></tr><tr><td style="text-align:left;font-weight:900">Gustavs Bērziņš</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr><tr><td style="text-align:left;font-weight:900">Gustavs Rība</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr><tr><td style="text-align:left;font-weight:900">Gusts Bergmanis</td><td>44</td><td>1.7</td><td>9</td><td>09:59</td><td>0.4</td><td>0.7</td><td>1.1</td><td>0.6</td><td>0.3</td><td>1.4</td><td>0.4</td><td>0.0</td><td>0</td></tr><tr><td style="text-align:left;font-weight:900">Henrijs Tavars</td><td>—</td><td>13.8</td><td>6</td><td>23:26</td><td>2.8</td><td>4.2</td><td>7.0</td><td>1.8</td><td>1.8</td><td>2.3</td><td>2.0</td><td>0.3</td><td>0</td></tr><tr><td style="text-align:left;font-weight:900">Jēkabs Reinis</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr><tr><td style="text-align:left;font-weight:900">Kārlis Ziediņš</td><td>34</td><td>8.2</td><td>5</td><td>18:45</td><td>1.8</td><td>1.4</td><td>3.2</td><td>1.0</td><td>2.6</td><td>2.6</td><td>1.2</td><td>0</td><td>0</td></tr><tr><td style="text-align:left;font-weight:900">Krišjānis Spila</td><td>32</td><td>6.6</td><td>10</td><td>17:36</td><td>0.7</td><td>1.3</td><td>2.0</td><td>1.8</td><td>1.5</td><td>2.0</td><td>1.8</td><td>0.2</td><td>0</td></tr><tr><td style="text-align:left;font-weight:900">Martins Pauls Ošiņš</td><td>4</td><td>2.7</td><td>7</td><td>14:16</td><td>1.6</td><td>2.9</td><td>4.4</td><td>1.6</td><td>1.6</td><td>0.9</td><td>1.4</td><td>0.1</td><td>0</td></tr><tr><td style="text-align:left;font-weight:900">Oskars Zinčenko</td><td>9</td><td>14.3</td><td>10</td><td>29:44</td><td>3.8</td><td>6.2</td><td>10.0</td><td>1.9</td><td>2.2</td><td>3.0</td><td>1.0</td><td>0.6</td><td>0</td></tr><tr><td style="text-align:left;font-weight:900">Oto Pumpurs</td><td>18</td><td>5.5</td><td>14</td><td>20:20</td><td>1.2</td><td>1.4</td><td>2.6</td><td>2.8</td><td>2.6</td><td>2.0</td><td>2.2</td><td>0.3</td><td>0</td></tr><tr><td style="text-align:left;font-weight:900">Otto Švāgeris</td><td>12</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr><tr><td style="text-align:left;font-weight:900">Pauls Sirmais</td><td>22</td><td>7.3</td><td>9</td><td>24:22</td><td>1.2</td><td>3.0</td><td>4.2</td><td>1.9</td><td>2.0</td><td>1.9</td><td>1.7</td><td>0.2</td><td>0</td></tr><tr><td style="text-align:left;font-weight:900">Ralfs Rudzinskis</td><td>13</td><td>12.3</td><td>12</td><td>30:02</td><td>2.5</td><td>9.6</td><td>12.1</td><td>3.2</td><td>2.1</td><td>3.7</td><td>0.9</td><td>0.8</td><td>0</td></tr><tr><td style="text-align:left;font-weight:900">Rodrigo Pontags</td><td>35</td><td>9.2</td><td>8</td><td>23:11</td><td>3.1</td><td>5.1</td><td>8.2</td><td>1.5</td><td>3.6</td><td>1.8</td><td>0.9</td><td>0.4</td><td>0</td></tr><tr><td style="text-align:left;font-weight:900">Rodrigo Pūce</td><td>—</td><td>2.0</td><td>1</td><td>06:17</td><td>1.0</td><td>0.0</td><td>1.0</td><td>0.0</td><td>0.0</td><td>2.0</td><td>0.0</td><td>0.0</td><td>0</td></tr><tr><td style="text-align:left;font-weight:900">Stefans Mežals</td><td>25</td><td>21.1</td><td>14</td><td>31:34</td><td>1.3</td><td>3.1</td><td>4.4</td><td>2.6</td><td>1.8</td><td>1.9</td><td>1.7</td><td>0</td><td>0</td></tr><tr><td style="text-align:left;font-weight:900">Teodors Rudzītis</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr><tr><td style="text-align:left;font-weight:900">Timotejs Martinsons</td><td>11</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<section id="leaders" class="section"><div class="panel"><div class="panel-head"><h2>Līderi</h2><div class="muted">TOP 5 pēc PPG</div></div><div class="leaders"><div class="leader first"><img src="https://i.postimg.cc/nrYVy9tN/IMG_3865.png"><div><div class="muted">#1</div><b>Stefans Mežals</b></div><div class="val">21.1 PPG</div></div><div class="leader"><img src="https://i.postimg.cc/8cBk2fVH/IMG_3859.png"><div><div class="muted">#2</div><b>Oskars Zinčenko</b></div><div class="val">14.3 PPG</div></div><div class="leader"><div class="no-logo">No<br>photo</div><div><div class="muted">#3</div><b>Henrijs Tavars</b></div><div class="val">13.8 PPG</div></div><div class="leader"><img src="https://i.postimg.cc/hvb4kQq3/IMG_3863.png"><div><div class="muted">#4</div><b>Ralfs Rudzinskis</b></div><div class="val">12.3 PPG</div></div><div class="leader"><img src="https://i.postimg.cc/tJtRKnHf/IMG_3864.png"><div><div class="muted">#5</div><b>Rodrigo Pontags</b></div><div class="val">9.2 PPG</div></div></div></div></section>
+<section id="games" class="section"><div class="panel"><div class="panel-head"><h2>Spēļu kalendārs un rezultāti</h2><div class="muted">Visas 22 pamatturnīra spēles</div></div><div class="games-list">
+<div class="game-card loss">
+  <div class="game-top"><span>12.04.2026 • DSN</span><b>Zaudējums</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>RBS DSN U16V</span></div>
+    <div class="score">93 - 99</div>
+    <div class="team right"><span>BS Ogre U16V</span><img class="logo" src="https://i.postimg.cc/rsPcX1PZ/IMG_3871.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card win">
+  <div class="game-top"><span>11.04.2026 • DSN</span><b>Uzvara</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>RBS DSN U16V</span></div>
+    <div class="score">102 - 94</div>
+    <div class="team right"><span>Talsu NSS U16V</span><img class="logo" src="https://i.postimg.cc/BZYJK3nv/IMG_3879.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card loss">
+  <div class="game-top"><span>09.04.2026 • DSN</span><b>Zaudējums</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/NGJQHtjQ/IMG_3874.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>RBS Basketbola Klase U16V</span></div>
+    <div class="score">112 - 83</div>
+    <div class="team right"><span>RBS DSN U16V</span><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card loss">
+  <div class="game-top"><span>28.03.2026 • Tukuma SH</span><b>Zaudējums</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/dQHJyFV1/IMG_3880.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>Tukuma Sp. skola U16V</span></div>
+    <div class="score">70 - 62</div>
+    <div class="team right"><span>RBS DSN U16V</span><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card loss">
+  <div class="game-top"><span>26.03.2026 • DSN</span><b>Zaudējums</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>RBS DSN U16V</span></div>
+    <div class="score">64 - 85</div>
+    <div class="team right"><span>RBS Jugla U16V</span><img class="logo" src="https://i.postimg.cc/1RCyqS3R/IMG_3876.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card win">
+  <div class="game-top"><span>22.03.2026 • Rīgas Valsts Vācu ģimn.</span><b>Uzvara</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/XNHnCWY7/IMG_3877.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>RBS Pārdaugava U16V</span></div>
+    <div class="score">78 - 90</div>
+    <div class="team right"><span>RBS DSN U16V</span><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card win">
+  <div class="game-top"><span>19.03.2026 • DSN</span><b>Uzvara</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>RBS DSN U16V</span></div>
+    <div class="score">97 - 67</div>
+    <div class="team right"><span>Ezerzeme/Rēzeknes BJSS U16V</span><img class="logo" src="https://i.postimg.cc/MZPzQwKC/IMG_3872.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card win">
+  <div class="game-top"><span>08.03.2026 • Valmiera</span><b>Uzvara</b></div>
+  <div class="game-row">
+    <div class="team"><div class="no-logo">No<br>photo</div><span>Bertānu VBS U16V</span></div>
+    <div class="score">67 - 70</div>
+    <div class="team right"><span>RBS DSN U16V</span><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card win">
+  <div class="game-top"><span>08.02.2026 • Rīdzene</span><b>Uzvara</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/Y2ntW7Cr/IMG_3875.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>RBS Centrs U16V</span></div>
+    <div class="score">65 - 71</div>
+    <div class="team right"><span>RBS DSN U16V</span><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card win">
+  <div class="game-top"><span>07.02.2026 • DSN</span><b>Uzvara</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>RBS DSN U16V</span></div>
+    <div class="score">88 - 84</div>
+    <div class="team right"><span>Jūrmalas Sp. skola U16V</span><img class="logo" src="https://i.postimg.cc/mZXTH4gx/IMG_3873.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card loss">
+  <div class="game-top"><span>29.01.2026 • Rīgas Teikas vsk. 1.zāle</span><b>Zaudējums</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/3rS3vhxx/IMG_3878.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>RBS/A. Krauķļa VEF U16V</span></div>
+    <div class="score">77 - 75</div>
+    <div class="team right"><span>RBS DSN U16V</span><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card win">
+  <div class="game-top"><span>13.12.2025 • Talsu SN</span><b>Uzvara</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/BZYJK3nv/IMG_3879.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>Talsu NSS U16V</span></div>
+    <div class="score">64 - 90</div>
+    <div class="team right"><span>RBS DSN U16V</span><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card win">
+  <div class="game-top"><span>06.12.2025 • Rēzekne</span><b>Uzvara</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/MZPzQwKC/IMG_3872.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>Ezerzeme/Rēzeknes BJSS U16V</span></div>
+    <div class="score">72 - 86</div>
+    <div class="team right"><span>RBS DSN U16V</span><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card loss">
+  <div class="game-top"><span>30.11.2025 • Rīdzene</span><b>Zaudējums</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>RBS DSN U16V</span></div>
+    <div class="score">74 - 79</div>
+    <div class="team right"><span>RBS Centrs U16V</span><img class="logo" src="https://i.postimg.cc/Y2ntW7Cr/IMG_3875.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card win">
+  <div class="game-top"><span>29.11.2025 • DSN</span><b>Uzvara</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>RBS DSN U16V</span></div>
+    <div class="score">103 - 90</div>
+    <div class="team right"><span>Bertānu VBS U16V</span><div class="no-logo">No<br>photo</div></div>
+  </div>
+</div>
+<div class="game-card win">
+  <div class="game-top"><span>15.11.2025 • DSN</span><b>Uzvara</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/XNHnCWY7/IMG_3877.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>RBS Pārdaugava U16V</span></div>
+    <div class="score">91 - 93</div>
+    <div class="team right"><span>RBS DSN U16V</span><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card win">
+  <div class="game-top"><span>09.11.2025 • Sporta Arēna Ogre</span><b>Uzvara</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/rsPcX1PZ/IMG_3871.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>BS Ogre U16V</span></div>
+    <div class="score">63 - 64</div>
+    <div class="team right"><span>RBS DSN U16V</span><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card win">
+  <div class="game-top"><span>08.11.2025 • DSN</span><b>Uzvara</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>RBS DSN U16V</span></div>
+    <div class="score">73 - 65</div>
+    <div class="team right"><span>RBS Basketbola Klase U16V</span><img class="logo" src="https://i.postimg.cc/NGJQHtjQ/IMG_3874.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card win">
+  <div class="game-top"><span>02.11.2025 • DSN</span><b>Uzvara</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>RBS DSN U16V</span></div>
+    <div class="score">90 - 76</div>
+    <div class="team right"><span>RBS/A. Krauķļa VEF U16V</span><img class="logo" src="https://i.postimg.cc/3rS3vhxx/IMG_3878.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card win">
+  <div class="game-top"><span>25.10.2025 • Juglas SK</span><b>Uzvara</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/1RCyqS3R/IMG_3876.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>RBS Jugla U16V</span></div>
+    <div class="score">78 - 82</div>
+    <div class="team right"><span>RBS DSN U16V</span><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card win">
+  <div class="game-top"><span>18.10.2025 • Jūrmalas SH, Raiņa iela 55</span><b>Uzvara</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/mZXTH4gx/IMG_3873.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>Jūrmalas Sp. skola U16V</span></div>
+    <div class="score">70 - 74</div>
+    <div class="team right"><span>RBS DSN U16V</span><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+<div class="game-card win">
+  <div class="game-top"><span>28.09.2025 • DSN</span><b>Uzvara</b></div>
+  <div class="game-row">
+    <div class="team"><img class="logo" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><span>RBS DSN U16V</span></div>
+    <div class="score">75 - 73</div>
+    <div class="team right"><span>Tukuma Sp. skola U16V</span><img class="logo" src="https://i.postimg.cc/dQHJyFV1/IMG_3880.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"></div>
+  </div>
+</div>
+</div></div></section>
+<section id="standings" class="section"><div class="panel"><div class="panel-head"><h2>Turnīra tabula</h2><div class="muted">12 komandas</div></div><div class="table-wrap"><table><thead><tr><th>Poz.</th><th style="text-align:left">Komanda</th><th>S</th><th>U</th><th>Z</th><th>Pkt.</th><th>GG</th><th>ZG</th></tr></thead><tbody><tr class=""><td>1</td><td class="team-cell"><img class="mini" src="https://i.postimg.cc/1RCyqS3R/IMG_3876.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><b>RBS Jugla U16V</b></td><td>22</td><td>19</td><td>3</td><td>41</td><td>1980</td><td>1434</td></tr><tr class=""><td>2</td><td class="team-cell"><img class="mini" src="https://i.postimg.cc/NGJQHtjQ/IMG_3874.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><b>RBS Basketbola Klase U16V</b></td><td>22</td><td>18</td><td>4</td><td>40</td><td>2039</td><td>1554</td></tr><tr class="dsn-row"><td>3</td><td class="team-cell"><img class="mini" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><b>RBS DSN U16V</b></td><td>22</td><td>16</td><td>6</td><td>38</td><td>1725</td><td>1640</td></tr><tr class=""><td>4</td><td class="team-cell"><img class="mini" src="https://i.postimg.cc/rsPcX1PZ/IMG_3871.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><b>BS Ogre U16V</b></td><td>22</td><td>15</td><td>7</td><td>37</td><td>1904</td><td>1607</td></tr><tr class=""><td>5</td><td class="team-cell"><img class="mini" src="https://i.postimg.cc/dQHJyFV1/IMG_3880.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><b>Tukuma Sp. skola U16V</b></td><td>22</td><td>14</td><td>8</td><td>36</td><td>1723</td><td>1593</td></tr><tr class=""><td>6</td><td class="team-cell"><img class="mini" src="https://i.postimg.cc/mZXTH4gx/IMG_3873.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><b>Jūrmalas Sp. skola U16V</b></td><td>22</td><td>12</td><td>10</td><td>34</td><td>1767</td><td>1624</td></tr><tr class=""><td>7</td><td class="team-cell"><img class="mini" src="https://i.postimg.cc/XNHnCWY7/IMG_3877.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><b>RBS Pārdaugava U16V</b></td><td>22</td><td>12</td><td>10</td><td>34</td><td>1719</td><td>1749</td></tr><tr class=""><td>8</td><td class="team-cell"><div class="no-logo">No<br>photo</div><b>Bertānu VBS U16V</b></td><td>22</td><td>9</td><td>13</td><td>31</td><td>1830</td><td>1839</td></tr><tr class=""><td>9</td><td class="team-cell"><img class="mini" src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><b>Rīdzene U16V</b></td><td>22</td><td>9</td><td>13</td><td>31</td><td>1585</td><td>1606</td></tr><tr class=""><td>10</td><td class="team-cell"><img class="mini" src="https://i.postimg.cc/3rS3vhxx/IMG_3878.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><b>RBS/A. Krauķļa VEF U16V</b></td><td>22</td><td>3</td><td>19</td><td>25</td><td>1422</td><td>1802</td></tr><tr class=""><td>11</td><td class="team-cell"><img class="mini" src="https://i.postimg.cc/BZYJK3nv/IMG_3879.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><b>Talsu NSS U16V</b></td><td>22</td><td>3</td><td>19</td><td>25</td><td>1518</td><td>2168</td></tr><tr class=""><td>12</td><td class="team-cell"><img class="mini" src="https://i.postimg.cc/MZPzQwKC/IMG_3872.png" onerror="this.outerHTML='<div class=&quot;no-logo&quot;>No<br>photo</div>'"><b>Ezerzeme/Rēzeknes BJSS U16V</b></td><td>22</td><td>2</td><td>20</td><td>24</td><td>1420</td><td>2016</td></tr></tbody></table></div></div></section>
 
+<section id="playoffs" class="section">
+  <div class="panel">
+    <div class="panel-head">
+      <h2>Playoff 2025/26</h2>
+      <div class="muted">1/4 fināli → Pusfināli → Medaļu spēles</div>
+    </div>
+
+    <div class="bracket-big">
+      <div class="bracket-title">PLAYOFF BRACKET</div>
+
+      <div class="bracket-layout playoff-four">
+
+        <div class="bracket-col">
+          <h3>1/4 fināli</h3>
+
+          <div class="bracket-match">
+            <div class="team-line">
+              <span class="seed">1</span>
+              <img src="https://i.postimg.cc/1RCyqS3R/IMG_3876.png" alt="">
+              <b>RBS Jugla U16V</b>
+            </div>
+            <div class="match-info">15.05.2026 • 13:00 • Sporta Arēna Ogre</div>
+            <div class="team-line">
+              <span class="seed">8</span>
+              <img src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" alt="">
+              <b>Rīdzene U16V</b>
+            </div>
+          </div>
+
+          <div class="bracket-match">
+            <div class="team-line">
+              <span class="seed">4</span>
+              <img src="https://i.postimg.cc/rsPcX1PZ/IMG_3871.png" alt="">
+              <b>BS Ogre U16V</b>
+            </div>
+            <div class="match-info">15.05.2026 • 15:00 • Sporta Arēna Ogre</div>
+            <div class="team-line">
+              <span class="seed">5</span>
+              <img src="https://i.postimg.cc/dQHJyFV1/IMG_3880.png" alt="">
+              <b>Tukuma Sp. skola U16V</b>
+            </div>
+          </div>
+
+          <div class="bracket-match dsn-match">
+            <div class="team-line">
+              <span class="seed">3</span>
+              <img src="https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg" alt="">
+              <b>RBS DSN U16V</b>
+            </div>
+            <div class="match-info">15.05.2026 • 17:00 • Sporta Arēna Ogre</div>
+            <div class="team-line">
+              <span class="seed">6</span>
+              <img src="https://i.postimg.cc/mZXTH4gx/IMG_3873.png" alt="">
+              <b>Jūrmalas Sp. skola U16V</b>
+            </div>
+          </div>
+
+          <div class="bracket-match">
+            <div class="team-line">
+              <span class="seed">2</span>
+              <img src="https://i.postimg.cc/NGJQHtjQ/IMG_3874.png" alt="">
+              <b>RBS Basketbola Klase U16V</b>
+            </div>
+            <div class="match-info">15.05.2026 • 19:00 • Sporta Arēna Ogre</div>
+            <div class="team-line">
+              <span class="seed">7</span>
+              <img src="https://i.postimg.cc/XNHnCWY7/IMG_3877.png" alt="">
+              <b>RBS Pārdaugava U16V</b>
+            </div>
+          </div>
+        </div>
+
+        <div class="bracket-col middle">
+          <h3>Pusfināli</h3>
+
+          <div class="empty-match">
+            Uzvarētājs 1/4 fināls<br>
+            <span>Jugla / Rīdzene</span>
+          </div>
+
+          <div class="empty-match">
+            Uzvarētājs 1/4 fināls<br>
+            <span>Ogre / Tukums</span>
+          </div>
+
+          <div class="empty-match dsn-empty">
+            Uzvarētājs 1/4 fināls<br>
+            <span>DSN / Jūrmala</span>
+          </div>
+
+          <div class="empty-match">
+            Uzvarētājs 1/4 fināls<br>
+            <span>Basketbola Klase / Pārdaugava</span>
+          </div>
+        </div>
+
+        <div class="bracket-col medal">
+          <h3>Medaļu spēles</h3>
+
+          <div class="empty-match bronze-box">
+            Bronzas spēle<br>
+            <span>Par 3. vietu</span>
+          </div>
+
+          <div class="empty-match final-box">
+            Fināls<br>
+            <span>Par 1. vietu</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="game" class="section"><div class="panel"><div class="panel-head"><h2>Spēle</h2><div class="muted">Kvizs</div></div><h3 id="quizQuestion"></h3><div id="quizAnswers" class="quiz-answers"></div><div class="quiz-actions"><button class="nav-btn" id="nextBtn" disabled>Nākamais</button><button class="nav-btn" onclick="restartQuiz()">Sākt no jauna</button></div><div id="quizResult" class="quiz-result" style="display:none"></div></div></section>
+</main><footer class="footer">© RBS DSN U16V</footer>
+</div>
 <script>
-const ASSETS = {
-  dsnLogo: "https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg",
-  team1: "https://i.postimg.cc/MKVr804r/IMG_2927.jpg",
-  team2: "https://i.postimg.cc/02DHqG3X/IMG_3254.jpg",
-  logos: {
-    DSN:"https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg", TUKUMS:"https://i.postimg.cc/dQHJyFV1/IMG_3880.png",
-    TALS:"https://i.postimg.cc/BZYJK3nv/IMG_3879.png", VEF:"https://i.postimg.cc/3rS3vhxx/IMG_3878.png",
-    PARDAUGAVA:"https://i.postimg.cc/XNHnCWY7/IMG_3877.png", JUGLA:"https://i.postimg.cc/1RCyqS3R/IMG_3876.png",
-    CENTRS:"https://i.postimg.cc/Y2ntW7Cr/IMG_3875.png", BAK:"https://i.postimg.cc/NGJQHtjQ/IMG_3874.png",
-    JURMALA:"https://i.postimg.cc/mZXTH4gx/IMG_3873.png", EZERZEME:"https://i.postimg.cc/MZPzQwKC/IMG_3872.png",
-    OGRE:"https://i.postimg.cc/rsPcX1PZ/IMG_3871.png", VALMIERA:"https://i.postimg.cc/7hWD83WB/IMG_3870.png",
-    RIDZENE:"https://i.postimg.cc/j2QqpnrC/IMG_3841.jpg"
-  },
-  playerPics: {
-    "Timotejs Martinsons":"https://i.postimg.cc/J7bhDvBm/IMG_3866.png","Stefans Mežals":"https://i.postimg.cc/nrYVy9tN/IMG_3865.png",
-    "Rodrigo Pontags":"https://i.postimg.cc/tJtRKnHf/IMG_3864.png","Ralfs Rudzinskis":"https://i.postimg.cc/hvb4kQq3/IMG_3863.png",
-    "Pauls Sirmais":"https://i.postimg.cc/nrYVy9tR/IMG_3862.png","Otto Švāgeris":"https://i.postimg.cc/ZnFYGvhV/IMG_3861.png",
-    "Oto Pumpurs":"https://i.postimg.cc/zvSDsH1p/IMG_3860.png","Oskars Zinčenko":"https://i.postimg.cc/8cBk2fVH/IMG_3859.png",
-    "Martins Pauls Ošiņš":"https://i.postimg.cc/0jd5TKq0/IMG_3858.png","Krišjānis Spila":"https://i.postimg.cc/zvSDsH1S/IMG_3857.png",
-    "Kārlis Ziediņš":"https://i.postimg.cc/Hn4Wq8C0/IMG_3856.png","Gusts Bergmanis":"https://i.postimg.cc/NF7G32wm/IMG_3855.png",
-    "Emīls Ozols":"https://i.postimg.cc/7hMPFJy7/IMG_3854.png","Deivids Dambis":"https://i.postimg.cc/ZnFYGvhy/IMG_3853.png",
-    "Dāvis Grīnvalds":"https://i.postimg.cc/Kjrc63yT/IMG_3852.png"
-  },
-  numbers: {
-    "Timotejs Martinsons":11,"Stefans Mežals":25,"Rodrigo Pontags":35,"Ralfs Rudzinskis":13,"Pauls Sirmais":22,
-    "Otto Švāgeris":12,"Oto Pumpurs":18,"Oskars Zinčenko":9,"Martins Pauls Ošiņš":4,"Krišjānis Spila":32,
-    "Kārlis Ziediņš":34,"Gusts Bergmanis":44,"Emīls Ozols":16,"Deivids Dambis":7,"Dāvis Grīnvalds":19
-  }
-};
-
-const TEAM_NAME = "RBS DSN U16V";
-const players = [
-  {name:"Atvars Siliņš",nat:"Latvija",dob:"12.05.2010"},{name:"Dāvis Grīnvalds",nat:"LAT",dob:"16.09.2010"},
-  {name:"Deivids Dambis",nat:"LAT",dob:"27.05.2010"},{name:"Emīls Ozols",nat:"LAT",dob:"14.05.2010"},
-  {name:"Gustavs Bērziņš",nat:"LAT",dob:"11.06.2010"},{name:"Gustavs Rība",nat:"Latvija",dob:"21.05.2010"},
-  {name:"Gusts Bergmanis",nat:"LAT",dob:"10.03.2011"},{name:"Henrijs Tavars",nat:"LAT",dob:"24.07.2010"},
-  {name:"Jēkabs Reinis",nat:"Latvija",dob:"01.01.2010"},{name:"Kārlis Ziediņš",nat:"Latvija",dob:"19.09.2010"},
-  {name:"Krišjānis Spila",nat:"LAT",dob:"12.02.2011"},{name:"Martins Pauls Ošiņš",nat:"LAT",dob:"02.06.2010"},
-  {name:"Oskars Zinčenko",nat:"Latvija",dob:"07.08.2010"},{name:"Oto Pumpurs",nat:"LAT",dob:"30.01.2010"},
-  {name:"Otto Švāgeris",nat:"Latvija",dob:"20.10.2011"},{name:"Pauls Sirmais",nat:"LAT",dob:"14.02.2010"},
-  {name:"Ralfs Rudzinskis",nat:"Latvija",dob:"12.06.2010"},{name:"Rodrigo Pontags",nat:"LAT",dob:"10.06.2010"},
-  {name:"Rodrigo Pūce",nat:"Latvija",dob:"07.12.2011"},{name:"Stefans Mežals",nat:"LAT",dob:"05.09.2010"},
-  {name:"Teodors Rudzītis",nat:"LAT",dob:"29.05.2010"},{name:"Timotejs Martinsons",nat:"LAT",dob:"04.05.2010"}
-];
-const playerStats = [
-  {name:"Stefans Mežals",ppg:21.1,g:14,mpg:"31:34",orpg:1.3,drpg:3.1,rpg:4.4,apg:2.6,fpg:1.8,topg:1.9,spg:1.7,bsg:0,dpg:0},
-  {name:"Oskars Zinčenko",ppg:14.3,g:10,mpg:"29:44",orpg:3.8,drpg:6.2,rpg:10.0,apg:1.9,fpg:2.2,topg:3.0,spg:1.0,bsg:0.6,dpg:0},
-  {name:"Henrijs Tavars",ppg:13.8,g:6,mpg:"23:26",orpg:2.8,drpg:4.2,rpg:7.0,apg:1.8,fpg:1.8,topg:2.3,spg:2.0,bsg:0.3,dpg:0},
-  {name:"Ralfs Rudzinskis",ppg:12.3,g:12,mpg:"30:02",orpg:2.5,drpg:9.6,rpg:12.1,apg:3.2,fpg:2.1,topg:3.7,spg:0.9,bsg:0.8,dpg:0},
-  {name:"Rodrigo Pontags",ppg:9.2,g:8,mpg:"23:11",orpg:3.1,drpg:5.1,rpg:8.2,apg:1.5,fpg:3.6,topg:1.8,spg:0.9,bsg:0.4,dpg:0},
-  {name:"Emīls Ozols",ppg:8.9,g:8,mpg:"20:02",orpg:3.8,drpg:5.4,rpg:9.1,apg:1.1,fpg:2.5,topg:2.2,spg:0.8,bsg:0.6,dpg:0},
-  {name:"Kārlis Ziediņš",ppg:8.2,g:5,mpg:"18:45",orpg:1.8,drpg:1.4,rpg:3.2,apg:1.0,fpg:2.6,topg:2.6,spg:1.2,bsg:0,dpg:0},
-  {name:"Pauls Sirmais",ppg:7.3,g:9,mpg:"24:22",orpg:1.2,drpg:3.0,rpg:4.2,apg:1.9,fpg:2.0,topg:1.9,spg:1.7,bsg:0.2,dpg:0},
-  {name:"Krišjānis Spila",ppg:6.6,g:10,mpg:"17:36",orpg:0.7,drpg:1.3,rpg:2.0,apg:1.8,fpg:1.5,topg:2.0,spg:1.8,bsg:0.2,dpg:0},
-  {name:"Oto Pumpurs",ppg:5.5,g:14,mpg:"20:20",orpg:1.2,drpg:1.4,rpg:2.6,apg:2.8,fpg:2.6,topg:2.0,spg:2.2,bsg:0.3,dpg:0},
-  {name:"Martins Pauls Ošiņš",ppg:2.7,g:7,mpg:"14:16",orpg:1.6,drpg:2.9,rpg:4.4,apg:1.6,fpg:1.6,topg:0.9,spg:1.4,bsg:0.1,dpg:0},
-  {name:"Rodrigo Pūce",ppg:2.0,g:1,mpg:"06:17",orpg:1.0,drpg:0.0,rpg:1.0,apg:0.0,fpg:0.0,topg:2.0,spg:0.0,bsg:0.0,dpg:0},
-  {name:"Gusts Bergmanis",ppg:1.7,g:9,mpg:"09:59",orpg:0.4,drpg:0.7,rpg:1.1,apg:0.6,fpg:0.3,topg:1.4,spg:0.4,bsg:0.0,dpg:0}
-];
-const teamKpis = [
-  {label:"Punkti vid. spēlē",value:"81.3"},{label:"Atl. bumbas uzbrukumā",value:"18.1"},{label:"Atl. bumbas aizsardzībā",value:"35.9"},
-  {label:"Atl. bumbas kopā",value:"54.1"},{label:"Piespēles",value:"16.3"},{label:"Piezīmes",value:"17.8"},
-  {label:"Kļūdas",value:"19.6"},{label:"Pārķertās",value:"11.9"},{label:"Bloķētie metieni",value:"2.5"},{label:"Danki",value:"0"}
-];
-const results = [
-  {date:"07.02.2026",venue:"—",home:true,opp:"Jūrmalas Sp. skola U16V",oppLogo:ASSETS.logos.JURMALA,scoreFor:88,scoreAg:84},
-  {date:"08.02.2026",venue:"Rīdzene",home:false,opp:"RBS Centrs U16V",oppLogo:ASSETS.logos.CENTRS,scoreFor:71,scoreAg:65},
-  {date:"29.01.2026",venue:"Rīgas Teikas vsk. 1.zāle",home:false,opp:"RBS/A. Krauķļa VEF U16V",oppLogo:ASSETS.logos.VEF,scoreFor:75,scoreAg:77},
-  {date:"13.12.2025",venue:"Talsu SN",home:false,opp:"Talsu NSS U16V",oppLogo:ASSETS.logos.TALS,scoreFor:90,scoreAg:64},
-  {date:"06.12.2025",venue:"Rēzekne",home:false,opp:"Ezerzeme/Rēzeknes BJSS U16V",oppLogo:ASSETS.logos.EZERZEME,scoreFor:86,scoreAg:72},
-  {date:"15.11.2025",venue:"RVVĢ",home:false,opp:"RBS Pārdaugava U16V",oppLogo:ASSETS.logos.PARDAUGAVA,scoreFor:93,scoreAg:91},
-  {date:"09.11.2025",venue:"Sporta Arēna Ogre",home:false,opp:"BS Ogre U16V",oppLogo:ASSETS.logos.OGRE,scoreFor:64,scoreAg:63},
-  {date:"08.11.2025",venue:"—",home:true,opp:"RBS Basketbola Klase U16V",oppLogo:ASSETS.logos.BAK,scoreFor:73,scoreAg:65}
-];
-const upcoming = [
-  {date:"19.03.2026",time:"17:00",venue:"—",home:true,opp:"Ezerzeme/Rēzeknes BJSS U16V",oppLogo:ASSETS.logos.EZERZEME},
-  {date:"26.03.2026",time:"18:30",venue:"Juglas SK",home:true,opp:"RBS Jugla U16V",oppLogo:ASSETS.logos.JUGLA},
-  {date:"28.03.2026",time:"15:30",venue:"Tukuma SH",home:false,opp:"Tukuma Sp. skola U16V",oppLogo:ASSETS.logos.TUKUMS},
-  {date:"11.04.2026",time:"14:30",venue:"DSN",home:true,opp:"Talsu NSS U16V",oppLogo:ASSETS.logos.TALS},
-  {date:"12.04.2026",time:"14:00",venue:"DSN",home:true,opp:"BS Ogre U16V",oppLogo:ASSETS.logos.OGRE}
-];
-const standings = [
-  {pos:1,team:"RBS Jugla U16V",logo:ASSETS.logos.JUGLA,s:15,u:13,z:2,pkt:28},
-  {pos:2,team:"RBS DSN U16V",logo:ASSETS.logos.DSN,s:14,u:12,z:2,pkt:26,dsn:true},
-  {pos:3,team:"BS Ogre U16V",logo:ASSETS.logos.OGRE,s:14,u:11,z:3,pkt:25},
-  {pos:4,team:"RBS Basketbola Klase U16V",logo:ASSETS.logos.BAK,s:13,u:10,z:3,pkt:23},
-  {pos:5,team:"Tukuma Sp. skola U16V",logo:ASSETS.logos.TUKUMS,s:13,u:8,z:5,pkt:21},
-  {pos:6,team:"RBS Pārdaugava U16V",logo:ASSETS.logos.PARDAUGAVA,s:13,u:8,z:5,pkt:21},
-  {pos:7,team:"Jūrmalas Sp. skola U16V",logo:ASSETS.logos.JURMALA,s:14,u:6,z:8,pkt:20},
-  {pos:8,team:"Talsu NSS U16V",logo:ASSETS.logos.TALS,s:14,u:0,z:14,pkt:14}
-];
-
-const qs=s=>document.querySelector(s), qsa=s=>Array.from(document.querySelectorAll(s));
-function safeSetImg(imgEl,url,fallbackUrl=ASSETS.dsnLogo){ if(!imgEl)return; imgEl.onerror=()=>{imgEl.onerror=null; imgEl.src=fallbackUrl}; imgEl.src=url; }
-function getNr(name){return ASSETS.numbers[name] ?? "—"} function getPic(name){return ASSETS.playerPics[name] ?? null} function getStat(name){return playerStats.find(x=>x.name===name)||null}
-
-function showSection(id){
-  qsa(".section").forEach(s=>s.classList.remove("is-active"));
-  qsa(".nav-btn").forEach(b=>b.classList.remove("is-active"));
-  const sec=qs("#"+id), btn=qs(`.nav-btn[data-target="${id}"]`);
-  if(sec)sec.classList.add("is-active"); if(btn)btn.classList.add("is-active");
-  window.scrollTo({top:0,behavior:"smooth"});
+function showSection(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(btn) btn.classList.add('active');
 }
-function initNav(){qsa(".nav-btn").forEach(btn=>btn.addEventListener("click",()=>showSection(btn.dataset.target)))}
-function renderHeaderAndAbout(){safeSetImg(qs("#brandLogo"),ASSETS.dsnLogo);safeSetImg(qs("#teamImg1"),ASSETS.team1);safeSetImg(qs("#teamImg2"),ASSETS.team2)}
-function renderRoster(list){
-  const grid=qs("#rosterGrid"), count=qs("#rosterCount"); if(!grid)return; grid.innerHTML="";
-  list.forEach(p=>{
-    const img=getPic(p.name), nr=getNr(p.name), card=document.createElement("div"); card.className="card";
-    const avatar=img?`<img class="avatar" src="${img}" alt="${p.name}" onerror="this.onerror=null;this.src='${ASSETS.dsnLogo}'">`:`<div class="avatar no-photo">No<br>photo</div>`;
-    card.innerHTML=`${avatar}<div class="info"><h3>${p.name}</h3><div class="meta"><div><span>Pilsonība:</span> ${p.nat}</div><div><span>Dzimšanas datums:</span> ${p.dob}</div><div><span>Nr:</span> ${nr}</div><div><span>Augums:</span> —</div></div><div class="tagrow"><span class="tag">U16V</span><span class="tag">DSN</span></div></div>`;
-    grid.appendChild(card);
-  });
-  if(count)count.textContent=`${list.length} spēlētāji`;
-}
-function renderTeamKpis(){const wrap=qs("#teamKpis"); if(!wrap)return; wrap.innerHTML=""; teamKpis.forEach(k=>{const el=document.createElement("div"); el.className="kpi"; el.innerHTML=`<div class="value">${k.value}</div><div class="label">${k.label}</div>`; wrap.appendChild(el)})}
-function renderStatsTable(){const body=qs("#statsBody"); if(!body)return; body.innerHTML=""; players.forEach(p=>{const s=getStat(p.name), nr=getNr(p.name), tr=document.createElement("tr"); tr.innerHTML=`<td style="text-align:left;font-weight:900">${p.name}</td><td>${nr}</td><td>${s?s.ppg:"—"}</td><td>${s?s.g:"—"}</td><td>${s?s.mpg:"—"}</td><td>${s?s.orpg:"—"}</td><td>${s?s.drpg:"—"}</td><td>${s?s.rpg:"—"}</td><td>${s?s.apg:"—"}</td><td>${s?s.fpg:"—"}</td><td>${s?s.topg:"—"}</td><td>${s?s.spg:"—"}</td><td>${s?s.bsg:"—"}</td><td>${s?s.dpg:"—"}</td>`; body.appendChild(tr)})}
-function renderLeaders(){const wrap=qs("#leadersList"); if(!wrap)return; wrap.innerHTML=""; [...playerStats].sort((a,b)=>b.ppg-a.ppg).slice(0,5).forEach((s,idx)=>{const img=getPic(s.name)||ASSETS.dsnLogo, div=document.createElement("div"); div.className="leader"+(idx===0?" first":""); div.innerHTML=`<img class="limg" src="${img}" alt="" onerror="this.onerror=null;this.src='${ASSETS.dsnLogo}'"><div><div class="muted">#${idx+1}</div><div class="name">${s.name}</div></div><div class="val">${s.ppg} PPG</div>`; wrap.appendChild(div)})}
-function renderGames(){
-  const resWrap=qs("#resultsList"), upWrap=qs("#upcomingList"); if(!resWrap||!upWrap)return; resWrap.innerHTML=""; upWrap.innerHTML="";
-  results.forEach(g=>{const isWin=g.scoreFor>g.scoreAg, scoreClass=isWin?"win":"loss", homeTeam=g.home?TEAM_NAME:g.opp, awayTeam=g.home?g.opp:TEAM_NAME, homeLogo=g.home?ASSETS.logos.DSN:g.oppLogo, awayLogo=g.home?g.oppLogo:ASSETS.logos.DSN, homeScore=g.home?g.scoreFor:g.scoreAg, awayScore=g.home?g.scoreAg:g.scoreFor, card=document.createElement("div"); card.className="game"; card.innerHTML=`<div class="game-top"><div>${g.date} • ${g.venue||"—"}</div><div>${isWin?"Uzvara":"Zaudējums"}</div></div><div class="game-row"><div class="team"><img class="team-logo" src="${homeLogo}" alt="" onerror="this.onerror=null;this.src='${ASSETS.dsnLogo}'"><span>${homeTeam}</span></div><div class="score ${scoreClass}">${homeScore} - ${awayScore}</div><div class="team right"><span>${awayTeam}</span><img class="team-logo" src="${awayLogo}" alt="" onerror="this.onerror=null;this.src='${ASSETS.dsnLogo}'"></div></div>`; resWrap.appendChild(card)});
-  upcoming.forEach(g=>{const homeTeam=g.home?TEAM_NAME:g.opp, awayTeam=g.home?g.opp:TEAM_NAME, homeLogo=g.home?ASSETS.logos.DSN:g.oppLogo, awayLogo=g.home?g.oppLogo:ASSETS.logos.DSN, card=document.createElement("div"); card.className="game"; card.innerHTML=`<div class="game-top"><div>${g.date} • ${g.time||"—"} • ${g.venue||"—"}</div><div>Plānots</div></div><div class="game-row"><div class="team"><img class="team-logo" src="${homeLogo}" alt="" onerror="this.onerror=null;this.src='${ASSETS.dsnLogo}'"><span>${homeTeam}</span></div><div class="score upcoming">—</div><div class="team right"><span>${awayTeam}</span><img class="team-logo" src="${awayLogo}" alt="" onerror="this.onerror=null;this.src='${ASSETS.dsnLogo}'"></div></div>`; upWrap.appendChild(card)});
-}
-function renderStandings(){const body=qs("#standingsBody"); if(!body)return; body.innerHTML=""; standings.forEach(r=>{const tr=document.createElement("tr"); if(r.dsn)tr.classList.add("dsn"); tr.innerHTML=`<td>${r.pos}</td><td style="text-align:left;font-weight:900"><div class="team-cell"><img class="teamlogo-mini" src="${r.logo}" alt="" onerror="this.onerror=null;this.src='${ASSETS.dsnLogo}'"><span>${r.team}</span></div></td><td><img class="teamlogo-mini" src="${r.logo}" alt="" onerror="this.onerror=null;this.src='${ASSETS.dsnLogo}'"></td><td>${r.s}</td><td>${r.u}</td><td>${r.z}</td><td>${r.pkt}</td>`; body.appendChild(tr)})}
-function initSearch(){const input=qs("#searchPlayer"); if(!input)return; input.addEventListener("input",()=>{const q=input.value.trim().toLowerCase(); renderRoster(players.filter(p=>p.name.toLowerCase().includes(q)))})}
-
-const quizData=[
-  {question:"Kā sauc komandas galveno treneri?",answers:["Artūrs Ronis","Jānis Blūms","Mārtiņš Gulbis","Raimonds Feldmanis"],correct:0},
-  {question:"Kurā turnīrā komanda 2025/26 sezonā izcīnīja 2. vietu?",answers:["LJBL","EYBL","BBBL Supercup","Eiropas kauss"],correct:2},
-  {question:"Kurā pilsētā darbojas DSN Basketball?",answers:["Liepāja","Valmiera","Rīga","Ventspils"],correct:2},
-  {question:"Ko nozīmē DSN?",answers:["Daugavas sporta nams","Dinamiskais sporta nams","Dubultais sporta nams","Dienvidu sporta nams"],correct:0},
-  {question:"Kura sadaļa tavā portfolio rāda komandas līderus pēc PPG?",answers:["Kalendārs","Līderi","Sastāvs","Tabula"],correct:1}
+document.getElementById('searchPlayer').addEventListener('input',function(){
+  const q=this.value.toLowerCase();
+  document.querySelectorAll('.player-card').forEach(c=>{c.style.display=c.dataset.name.includes(q)?'flex':'none';});
+});
+const quiz=[
+['Kurā vietā DSN pabeidza pamatturnīru?',['1.','2.','3.','6.'],2],
+['Pret ko DSN spēlē playoff?',['Jūrmala','Ogre','Jugla','Talsi'],0],
+['Cik uzvaras DSN bija?',['12','16','18','19'],1]
 ];
-const quizQuestion=qs("#quizQuestion"), quizAnswers=qs("#quizAnswers"), quizProgress=qs("#quizProgress"), quizScoreLive=qs("#quizScoreLive"), nextQuestionBtn=qs("#nextQuestionBtn"), restartQuizBtn=qs("#restartQuizBtn"), quizResult=qs("#quizResult");
-let currentQuestion=0, score=0, answered=false;
-function renderQuestion(){const q=quizData[currentQuestion]; answered=false; quizQuestion.textContent=q.question; quizProgress.textContent=`${currentQuestion+1} / ${quizData.length}`; quizScoreLive.textContent=`Punkti: ${score}`; quizAnswers.innerHTML=""; quizResult.style.display="none"; nextQuestionBtn.disabled=true; q.answers.forEach((answer,index)=>{const btn=document.createElement("button"); btn.className="answer-btn"; btn.textContent=answer; btn.addEventListener("click",()=>handleAnswer(index)); quizAnswers.appendChild(btn)})}
-function handleAnswer(selectedIndex){if(answered)return; answered=true; const correctIndex=quizData[currentQuestion].correct, buttons=quizAnswers.querySelectorAll(".answer-btn"); buttons.forEach((btn,index)=>{btn.disabled=true; if(index===correctIndex)btn.classList.add("correct"); if(index===selectedIndex&&selectedIndex!==correctIndex)btn.classList.add("wrong")}); if(selectedIndex===correctIndex){score++; quizScoreLive.textContent=`Punkti: ${score}`;} nextQuestionBtn.disabled=false}
-function showFinalResult(){quizQuestion.textContent="Kvizs pabeigts!"; quizAnswers.innerHTML=""; quizProgress.textContent=`${quizData.length} / ${quizData.length}`; quizScoreLive.textContent=`Punkti: ${score}`; nextQuestionBtn.disabled=true; let message=score===quizData.length?"Perfekti! Tu ļoti labi pārzini komandu.":score>=4?"Ļoti labs rezultāts! Tu zini daudz par komandu.":score>=2?"Labs mēģinājums! Vēl mazliet un būsi eksperts.":"Laiks vairāk iepazīt komandu un mēģināt vēlreiz."; quizResult.style.display="block"; quizResult.innerHTML=`<strong>Tavs rezultāts: ${score}/${quizData.length}</strong><br>${message}`}
-function initQuiz(){if(!quizQuestion||!quizAnswers||!quizProgress||!quizScoreLive||!nextQuestionBtn||!restartQuizBtn||!quizResult)return; nextQuestionBtn.addEventListener("click",()=>{if(currentQuestion<quizData.length-1){currentQuestion++;renderQuestion()}else{showFinalResult()}}); restartQuizBtn.addEventListener("click",()=>{currentQuestion=0;score=0;renderQuestion()}); renderQuestion()}
-
-renderHeaderAndAbout(); renderRoster(players); renderTeamKpis(); renderStatsTable(); renderLeaders(); renderGames(); renderStandings(); initNav(); initSearch(); initQuiz();
+let qi=0,score=0,answered=false;
+const qq=document.getElementById('quizQuestion'),qa=document.getElementById('quizAnswers'),next=document.getElementById('nextBtn'),qr=document.getElementById('quizResult');
+function renderQuiz(){answered=false;qr.style.display='none';next.disabled=true;qq.textContent=quiz[qi][0];qa.innerHTML='';quiz[qi][1].forEach((a,i)=>{let b=document.createElement('button');b.className='answer-btn';b.textContent=a;b.onclick=()=>answer(i,b);qa.appendChild(b);})}
+function answer(i,b){if(answered)return;answered=true;let c=quiz[qi][2];document.querySelectorAll('.answer-btn').forEach((x,n)=>{x.disabled=true;if(n===c)x.classList.add('correct');if(n===i&&i!==c)x.classList.add('wrong');});if(i===c)score++;next.disabled=false;}
+next.onclick=function(){if(qi<quiz.length-1){qi++;renderQuiz();}else{qq.textContent='Kvizs pabeigts!';qa.innerHTML='';next.disabled=true;qr.style.display='block';qr.innerHTML='<b>Rezultāts: '+score+'/'+quiz.length+'</b>';}};
+function restartQuiz(){qi=0;score=0;renderQuiz();}
+renderQuiz();
 </script>
 </body>
 </html>
